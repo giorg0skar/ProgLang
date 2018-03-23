@@ -1,0 +1,80 @@
+\documentclass[11pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english, greek]{babel}
+\usepackage[LGR, T1]{fontenc}
+\usepackage{textgreek}
+\usepackage{url}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{listing}
+
+
+\begin{document}
+\begin{titlepage}
+	\centering
+	\begin{figure}
+	\centering
+	\includegraphics[width=0.3\textwidth]{pyrforos-digamma}
+	\end{figure}
+	{\scshape Εθνικό Μετσόβιο Πολυτεχνείο \par Σχολή Ηλεκτρολόγων Μηχανικών και Μηχανικών Υπολογιστών\par}
+	\vspace{0.5cm}
+	{\scshape \textbf{Γλώσσες Προγραμματισμού 2} \par \textbf{Άσκηση 4 Συστήματα τύπων}\par}
+	\vspace{0.5cm}
+	{\Large Γεώργιος Καράκος\par} 
+	\vspace{0.5cm}
+	{\Large Αριθμός Μητρώου: 03113204\par}
+	
+	
+	\vfill
+
+\end{titlepage}
+%\tableofcontents
+
+\chapter*{Μέρος 1ο - Αυτοεφαρμογή}
+\par 'Εχουμε σύστημα τύπων με απλές συναρτήσεις όπως περιγράφεται στη σελίδα 14 των διαφανειών. Προσπαθούμε να αποδείξουμε αν μπορεί να υπάρχει κάποιο περιβάλλον Γ και κάποιος τύπος τ ώστε να ισχύει:
+$$\Gamma|- x \ x:\tau$$
+Ακολουθούμε τη μέθοδο της εις άτοπο απαγωγής.
+
+Αν υποθέσουμε ότι υπάρχει περιβάλλον Γ για το οποίο να ισχύει:
+$\Gamma|- x \ x : \tau$
+τότε πρέπει να ισχύουν τα ακόλουθα:
+$\Gamma|- x : \tau' \rightarrow \tau$    και   $\Gamma|- x : \tau'$    
+,όπου τ' ένας τύπος.
+Σύμφωνα με τα παραπάνω η έκφραση $x$ έχει τύπους $\tau \rightarrow \tau'$ και τ'. Για να ικανοποιούνται και οι δύο σχέσεις, οι τύποι αυτοί πρέπει να είναι δομικά ίδιοι. Παρατηρούμε όμως ότι αυτό δεν είναι δυνατόν, καθώς ο τύπος $\tau' \rightarrow \tau$ υποδηλώνει συνάρτηση που παίρνει είσοδο ένα δεδομένο τύπου τ' και επιστρέφει τιμή τύπου τ, οπότε δε μπορεί να είναι ίδιος με τον τύπο τ' στο σύστημα τύπων που έχουμε διαθέσιμο.
+
+\chapter*{Μέρος 2ο - Αναφορές και αναδρομή}
+%\section{}
+\textbf{\Large{1.}}
+\par Πρέπει να κατασκευάσουμε ένα πρόγραμμα το οποίο να μην τερματίζει. Γράφτηκε χρησιμοποιώντας το \textlatin{syntactic sugar let} , καθώς γνωρίζουμε ότι είναι ισοδύναμο με λάμδα έκφραση. \\
+\selectlanguage{english}
+
+\begin{listing}
+let r = ref (λn: Int.n)
+
+	\quad in let f = Int $\rightarrow$ Int.(λn. !r n)
+	
+		\quad \quad \quad in (r:=f; f 1) \\
+%λr: Ref Int $\rightarrow$ Int.λf: Int $\rightarrow$ Int.(r:=f; f)(λs: Int. !r s)(ref λs: Int.s) 3
+\end{listing}
+%}
+\selectlanguage{greek}
+
+Το παραπάνω πρόγραμμα δε θα τερματίσει ποτέ καθώς η κλήση της συνάρτησης $f$ με παράμετρο 1, θα καλέσει την συνάρτηση την οποία κάνει \textlatin{reference} η $r$ με παράμετρο πάλι 1. Εφόσον η συνάρτηση που κάνει \textlatin{reference} η $r$ είναι η $f$, αυτό σημαίνει πως θα καλείται συνεχώς η $f$ με το ίδιο όρισμα, οπότε το πρόγραμμα δεν τερματίζει. \\
+
+%\section{}
+\par \textbf{\Large{2.}}
+\par Στην ίδια γλώσσα γράφουμε τη συνάρτηση που να υπολογίζει το παραγοντικό ενός φυσικού αριθμού.\\
+\selectlanguage{english}
+
+\begin{listing}
+let r = ref (λn: Int.n)
+
+	\quad in let f = Int $\rightarrow$ Int.(λn. if n<=1 then 1 else n*(!r (n-1)))
+		
+		\quad \quad \quad in (r:=f; f) \\
+\end{listing}
+
+\selectlanguage{greek}
+Η $r$ τώρα μπορεί να καλεστεί με όρισμα έναν φυσικό αριθμό και επιστρέφει το παραγοντικό αυτού του αριθμού.
+\end{document}
